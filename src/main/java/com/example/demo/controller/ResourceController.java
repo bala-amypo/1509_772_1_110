@@ -1,33 +1,32 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.ResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.repository.ResourceRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/resources")
-public class ResourceController {
+@Service
+public class ResourceService {
 
-    @Autowired
-    private ResourceService resourceService;
+    private final ResourceRepository resourceRepository;
 
-    // POST /api/resources  → create resource
-    @PostMapping
-    public com.example.demo.entity.Resource createResource(@RequestBody com.example.demo.entity.Resource resource) {
-        return resourceService.createResource(resource);
+    public ResourceService(ResourceRepository resourceRepository) {
+        this.resourceRepository = resourceRepository;
     }
 
-    // GET /api/resources → list all resources
-    @GetMapping
+    public com.example.demo.entity.Resource createResource(com.example.demo.entity.Resource resource) {
+        if (resourceRepository.existsByResourceName(resource.getResourceName())) {
+            throw new RuntimeException("Resource already exists");
+        }
+        return resourceRepository.save(resource);
+    }
+
     public List<com.example.demo.entity.Resource> getAllResources() {
-        return resourceService.getAllResources();
+        return resourceRepository.findAll();
     }
 
-    // GET /api/resources/{id} → get resource by id
-    @GetMapping("/{id}")
-    public com.example.demo.entity.Resource getResourceById(@PathVariable Long id) {
-        return resourceService.getResourceById(id);
+    public com.example.demo.entity.Resource getResourceById(Long id) {
+        return resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found"));
     }
 }
