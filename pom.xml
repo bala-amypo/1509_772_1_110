@@ -82,7 +82,7 @@
 						<artifactId>surefire-testng</artifactId>
 						<version>3.2.5</version>
 					</dependency>
-<!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
+
 
 				</dependencies>
 			</plugin>
