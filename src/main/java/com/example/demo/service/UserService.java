@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.UserEntity;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +13,10 @@ public class UserService {
         this.repository = repository;
     }
 
-    public UserEntity create(UserEntity user) {
+    public User registerUser(User user) {
 
-        // Rule 1: email unique
         if (repository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("User with email already exists");
-        }
-
-        // Rule 2: default role
-        if (user.getRole() == null || user.getRole().isBlank()) {
-            user.setRole("USER");
+            throw new RuntimeException("Email already exists");
         }
 
         return repository.save(user);
