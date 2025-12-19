@@ -7,30 +7,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResourceService {
 
-    private final ResourceRepository resourceRepository;
+    private final ResourceRepository repository;
 
-    public ResourceService(ResourceRepository resourceRepository) {
-        this.resourceRepository = resourceRepository;
+    public ResourceService(ResourceRepository repository) {
+        this.repository = repository;
     }
 
-    public ResourceEntity createResource(
-            String resourceName,
-            String resourceType,
-            Integer capacity,
-            String location
-    ) {
-        if (resourceRepository.existsByResourceName(resourceName)) {
-            throw new IllegalArgumentException(
-                "Resource with name '" + resourceName + "' already exists"
-            );
+    public ResourceEntity create(ResourceEntity resource) {
+
+        // Rule 1: resourceName unique
+        if (repository.existsByResourceName(resource.getResourceName())) {
+            throw new RuntimeException("Resource already exists");
         }
 
-        ResourceEntity resource = new ResourceEntity();
-        resource.setResourceName(resourceName);
-        resource.setResourceType(resourceType);
-        resource.setCapacity(capacity);
-        resource.setLocation(location);
+        // Rule 2: resourceType required
+        if (resource.getResourceType() == null || resource.getResourceType().isBlank()) {
+            throw new RuntimeException("resourceType is required");
+        }
 
-        return resourceRepository.save(resource);
+        // Rule 3: capacity >= 1
+        if (resource.getCapacity() == null || resource.getCapacity() < 1) {
+            throw new RuntimeException("capacity must be >= 1");
+        }
+
+        return repository.save(resource);
     }
 }
