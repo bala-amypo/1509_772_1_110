@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.example.demo.entity.ResourceEntity;
 
 @Entity
 @Table(name = "resources")
