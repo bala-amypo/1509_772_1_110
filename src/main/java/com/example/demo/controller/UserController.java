@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.UserEntity;
+import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +14,8 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<UserEntity> create(@RequestBody UserEntity user) {
-        return new ResponseEntity<>(service.create(user), HttpStatus.CREATED);
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        return service.registerUser(user);
     }
 }
