@@ -1,40 +1,43 @@
-import javax.persistence.*;
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Resource {
+@Table(name = "resources")
+public class ResourceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String resourceName;
 
+    @Column(nullable = false)
     private String resourceType;
 
+    @Column(nullable = false)
     private Integer capacity;
 
     private String location;
 
     private LocalDateTime createdAt;
 
-    public Resource() {}
+    public ResourceEntity() {}
 
-    public Resource(String resourceName, String resourceType, Integer capacity, String location, LocalDateTime createdAt) {
-        this.resourceName = resourceName;
-        this.resourceType = resourceType;
-        this.capacity = capacity;
-        this.location = location;
-        this.createdAt = createdAt;
+    @PrePersist
+    public void prePersist() {
+        if (capacity == null || capacity < 1) {
+            throw new IllegalArgumentException("Capacity must be >= 1");
+        }
+        this.createdAt = LocalDateTime.now();
     }
+
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getResourceName() {
@@ -71,25 +74,5 @@ public class Resource {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @PrePersist
-    @Resource
-    public void validate() throws IllegalArgumentException {
-        if (this.resourceName == null || this.resourceName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Resource name is required");
-        }
-
-        if (this.resourceType == null || this.resourceType.trim().isEmpty()) {
-            throw new IllegalArgumentException("Resource type is required");
-        }
-
-        if (this.capacity == null || this.capacity < 1) {
-            throw new IllegalArgumentException("Capacity must be greater than or equal to 1");
-        }
     }
 }
