@@ -78,7 +78,7 @@ public class Resource {
     }
 
     @PrePersist
-    @PreUpdate
+    @Resource
     public void validate() throws IllegalArgumentException {
         if (this.resourceName == null || this.resourceName.trim().isEmpty()) {
             throw new IllegalArgumentException("Resource name is required");
