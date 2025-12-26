@@ -3,9 +3,11 @@ package com.example.demo.service;
 import com.example.demo.entity.AllocationRule;
 import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AllocationRuleRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // ✅ ADD THIS
 public class AllocationRuleService {
 
     private final AllocationRuleRepository ruleRepository;
@@ -15,15 +17,9 @@ public class AllocationRuleService {
     }
 
     public AllocationRule createRule(AllocationRule rule) {
-
         if (ruleRepository.existsByRuleName(rule.getRuleName())) {
             throw new ValidationException("rule exists");
         }
-
-        if (rule.getPriorityWeight() != null && rule.getPriorityWeight() < 0) {
-            throw new ValidationException("priority must be >= 0");
-        }
-
         return ruleRepository.save(rule);
     }
 

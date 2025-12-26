@@ -6,7 +6,7 @@ import com.example.demo.entity.ResourceRequest;
 import com.example.demo.repository.ResourceAllocationRepository;
 import com.example.demo.repository.ResourceRepository;
 import com.example.demo.repository.ResourceRequestRepository;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
 
 public class ResourceAllocationService {
