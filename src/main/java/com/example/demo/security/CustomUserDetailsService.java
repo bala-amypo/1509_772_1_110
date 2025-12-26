@@ -1,54 +1,35 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.io.IOException;
 import java.util.List;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
 
-        String header = request.getHeader("Authorization");
+        User user = userRepository.findAll().stream()
+                .filter(u -> u.getEmail().equals(email))
+                .findFirst()
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found"));
 
-        if (header != null && header.startsWith("Bearer ")) {
-
-            String token = header.substring(7);
-            Claims claims = jwtUtil.parseClaims(token);
-
-            String email = claims.getSubject();
-            String role = claims.get("role", String.class);
-
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            email,
-                            null,
-                            List.of(() -> "ROLE_" + role)
-                    );
-
-            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        }
-
-        filterChain.doFilter(request, response);
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                "",
+                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+        );
     }
 }
