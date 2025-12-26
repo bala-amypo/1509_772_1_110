@@ -5,9 +5,9 @@ import com.example.demo.entity.User;
 import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.ResourceRequestRepository;
 import com.example.demo.repository.UserRepository;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
-
+@Service 
 public class ResourceRequestService {
 
     private final ResourceRequestRepository requestRepository;
