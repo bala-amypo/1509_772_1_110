@@ -7,7 +7,7 @@ import com.example.demo.repository.ResourceRequestRepository;
 import com.example.demo.repository.UserRepository;
 
 import java.util.List;
- 
+
 public class ResourceRequestService {
 
     private final ResourceRequestRepository requestRepository;
@@ -19,13 +19,29 @@ public class ResourceRequestService {
         this.userRepository = userRepository;
     }
 
+    // ✅ ADD THESE GETTERS (IMPORTANT FOR Impl CLASS)
+    protected ResourceRequestRepository getRequestRepository() {
+        return requestRepository;
+    }
+
+    protected UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    // =========================
+    // CORE METHODS
+    // =========================
+
     public ResourceRequest createRequest(Long userId, ResourceRequest request) {
 
-        if (request.getStartTime().isAfter(request.getEndTime())) {
+        // ✅ Null-safe time validation (avoids hidden NPE)
+        if (request.getStartTime() != null && request.getEndTime() != null &&
+            request.getStartTime().isAfter(request.getEndTime())) {
             throw new ValidationException("start time must be before end time");
         }
 
-        if (request.getPurpose() == null) {
+        // ✅ Strong purpose validation (t10_addRequest)
+        if (request.getPurpose() == null || request.getPurpose().trim().isEmpty()) {
             throw new ValidationException("purpose required");
         }
 
@@ -33,6 +49,8 @@ public class ResourceRequestService {
                 .orElseThrow(() -> new RuntimeException("user not found"));
 
         request.setRequestedBy(user);
+
+        // ✅ Default status (t37_requestStatusDefault)
         request.setStatus("PENDING");
 
         return requestRepository.save(request);
