@@ -13,6 +13,14 @@ public class AllocationRule {
     private String ruleType;
     private Integer priorityWeight;
 
+    public AllocationRule() {
+    }
+
+    // ✅ REQUIRED by tests
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

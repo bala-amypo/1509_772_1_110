@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class ResourceAllocation {
@@ -17,6 +18,13 @@ public class ResourceAllocation {
 
     private Boolean conflictFlag;
     private String notes;
+
+    // ✅ REQUIRED by tests
+    private LocalDateTime allocatedAt;
+
+    public ResourceAllocation() {
+        this.allocatedAt = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
@@ -52,5 +60,10 @@ public class ResourceAllocation {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    // ✅ REQUIRED by tests
+    public LocalDateTime getAllocatedAt() {
+        return allocatedAt;
     }
 }

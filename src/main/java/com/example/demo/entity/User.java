@@ -9,20 +9,38 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
+    private String name;
     private String email;
-    private String role = "USER";
+    private String password;
+    private String role;
+
+    // ✅ REQUIRED: No-arg constructor
+    public User() {
+    }
+
+    // ✅ REQUIRED: 4-arg constructor (tests use this)
+    public User(String name, String email, String password, String role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    // ✅ REQUIRED by tests
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -31,6 +49,15 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    // ✅ REQUIRED by tests
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRole() {
