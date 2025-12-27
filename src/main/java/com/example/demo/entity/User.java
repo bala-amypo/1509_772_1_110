@@ -9,16 +9,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 🔹 Main field used by tests
     private String name;
+
     private String email;
     private String password;
     private String role;
 
-    // ✅ REQUIRED: No-arg constructor
+    // ✅ No-arg constructor
     public User() {
     }
 
-    // ✅ REQUIRED: 4-arg constructor (tests use this)
+    // ✅ Constructor required by tests
     public User(String name, String email, String password, String role) {
         this.name = name;
         this.email = email;
@@ -26,15 +28,21 @@ public class User {
         this.role = role;
     }
 
-    // ✅ REQUIRED by tests
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // =========================
+    // ID
+    // =========================
     public Long getId() {
         return id;
     }
 
+    // ✅ Required by tests
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // =========================
+    // NAME (for tests)
+    // =========================
     public String getName() {
         return name;
     }
@@ -43,6 +51,20 @@ public class User {
         this.name = name;
     }
 
+    // =========================
+    // FULL NAME (for controller)
+    // =========================
+    public String getFullName() {
+        return name;
+    }
+
+    public void setFullName(String fullName) {
+        this.name = fullName;
+    }
+
+    // =========================
+    // EMAIL
+    // =========================
     public String getEmail() {
         return email;
     }
@@ -51,7 +73,9 @@ public class User {
         this.email = email;
     }
 
-    // ✅ REQUIRED by tests
+    // =========================
+    // PASSWORD (tests require getter)
+    // =========================
     public String getPassword() {
         return password;
     }
@@ -60,11 +84,7 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-}
+    // =========================
+    // ROLE
+    // =========================
+    public String getRole()
