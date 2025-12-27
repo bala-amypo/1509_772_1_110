@@ -3,9 +3,9 @@ package com.example.demo.service;
 import com.example.demo.entity.Resource;
 import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.ResourceRepository;
-import org.springframework.stereotype.Service;
+
 import java.util.List;
-@Service 
+ 
 public class ResourceService {
 
     private final ResourceRepository resourceRepository;
