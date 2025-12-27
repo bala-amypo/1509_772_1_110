@@ -19,20 +19,19 @@ public class ResourceRequestServiceImpl extends ResourceRequestService {
     @Override
     public ResourceRequest createRequest(Long userId, ResourceRequest request) {
 
-        // ✅ FIX 1: purpose validation (t10_addRequest)
+        // ✅ Test: t10_addRequest
         if (request.getPurpose() == null || request.getPurpose().trim().isEmpty()) {
             throw new ValidationException("purpose required");
         }
 
-        // fetch user
-        User user = userRepository.findById(userId)
+        User user = getUserRepository().findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         request.setRequestedBy(user);
 
-        // ✅ FIX 2: default status (t37_requestStatusDefault)
+        // ✅ Test: t37_requestStatusDefault
         request.setStatus("PENDING");
 
-        return requestRepository.save(request);
+        return getRequestRepository().save(request);
     }
 }
