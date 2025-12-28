@@ -4,61 +4,59 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "resource_allocations")
-public class ResourceAllocation {
+@Table(name = "resource_requests")
+public class ResourceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    private String resourceType;
+    
     @ManyToOne
-    @JoinColumn(name = "resource_id")
-    private Resource resource;
+    @JoinColumn(name = "requested_by_id")
+    private User requestedBy;
     
-    @OneToOne
-    @JoinColumn(name = "request_id")
-    private ResourceRequest request;
+    private LocalDateTime startTime;
     
-    private LocalDateTime allocatedAt;
+    private LocalDateTime endTime;
     
-    private Boolean conflictFlag;
+    private String purpose;
     
-    private String notes;
+    private String status;
 
-    public ResourceAllocation() {
-        this.allocatedAt = LocalDateTime.now();
+    public ResourceRequest() {
+        this.status = "PENDING";
     }
 
-    public ResourceAllocation(Resource resource, ResourceRequest request, Boolean conflictFlag, String notes) {
+    public ResourceRequest(String resourceType, User requestedBy, LocalDateTime startTime, LocalDateTime endTime, String purpose, String status) {
         this();
-        this.resource = resource;
-        this.request = request;
-        this.conflictFlag = conflictFlag;
-        this.notes = notes;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        if (allocatedAt == null) {
-            allocatedAt = LocalDateTime.now();
-        }
+        this.resourceType = resourceType;
+        this.requestedBy = requestedBy;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.purpose = purpose;
+        this.status = status != null ? status : "PENDING";
     }
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Resource getResource() { return resource; }
-    public void setResource(Resource resource) { this.resource = resource; }
+    public String getResourceType() { return resourceType; }
+    public void setResourceType(String resourceType) { this.resourceType = resourceType; }
 
-    public ResourceRequest getRequest() { return request; }
-    public void setRequest(ResourceRequest request) { this.request = request; }
+    public User getRequestedBy() { return requestedBy; }
+    public void setRequestedBy(User requestedBy) { this.requestedBy = requestedBy; }
 
-    public LocalDateTime getAllocatedAt() { return allocatedAt; }
-    public void setAllocatedAt(LocalDateTime allocatedAt) { this.allocatedAt = allocatedAt; }
+    public LocalDateTime getStartTime() { return startTime; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
 
-    public Boolean getConflictFlag() { return conflictFlag; }
-    public void setConflictFlag(Boolean conflictFlag) { this.conflictFlag = conflictFlag; }
+    public LocalDateTime getEndTime() { return endTime; }
+    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public String getPurpose() { return purpose; }
+    public void setPurpose(String purpose) { this.purpose = purpose; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
