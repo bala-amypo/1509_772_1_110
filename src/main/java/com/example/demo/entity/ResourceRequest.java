@@ -4,80 +4,61 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class ResourceRequest {
-
+@Table(name = "resource_allocations")
+public class ResourceAllocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String resourceType;
-
+    
     @ManyToOne
-    private User requestedBy;
+    @JoinColumn(name = "resource_id")
+    private Resource resource;
+    
+    @OneToOne
+    @JoinColumn(name = "request_id")
+    private ResourceRequest request;
+    
+    private LocalDateTime allocatedAt;
+    
+    private Boolean conflictFlag;
+    
+    private String notes;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-
-    private String purpose;
-    private String status;
-
-    public ResourceRequest() {
+    public ResourceAllocation() {
+        this.allocatedAt = LocalDateTime.now();
     }
 
-    // ✅ REQUIRED by tests
-    public void setId(Long id) {
-        this.id = id;
+    public ResourceAllocation(Resource resource, ResourceRequest request, Boolean conflictFlag, String notes) {
+        this();
+        this.resource = resource;
+        this.request = request;
+        this.conflictFlag = conflictFlag;
+        this.notes = notes;
     }
 
-    public Long getId() {
-        return id;
+    @PrePersist
+    public void prePersist() {
+        if (allocatedAt == null) {
+            allocatedAt = LocalDateTime.now();
+        }
     }
 
-    public String getResourceType() {
-        return resourceType;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
-    }
+    public Resource getResource() { return resource; }
+    public void setResource(Resource resource) { this.resource = resource; }
 
-    public User getRequestedBy() {
-        return requestedBy;
-    }
+    public ResourceRequest getRequest() { return request; }
+    public void setRequest(ResourceRequest request) { this.request = request; }
 
-    public void setRequestedBy(User requestedBy) {
-        this.requestedBy = requestedBy;
-    }
+    public LocalDateTime getAllocatedAt() { return allocatedAt; }
+    public void setAllocatedAt(LocalDateTime allocatedAt) { this.allocatedAt = allocatedAt; }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
+    public Boolean getConflictFlag() { return conflictFlag; }
+    public void setConflictFlag(Boolean conflictFlag) { this.conflictFlag = conflictFlag; }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 }
