@@ -1,4 +1,6 @@
 package com.example.demo.entity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import jakarta.persistence.*;
 
@@ -94,8 +96,7 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+    
 @PrePersist
 public void hashPassword() {
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
