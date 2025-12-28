@@ -2,39 +2,41 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.ResourceRequest;
 import com.example.demo.service.ResourceRequestService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/requests")
 public class ResourceRequestController {
 
-    private final ResourceRequestService service;
+    private final ResourceRequestService requestService;
 
-    public ResourceRequestController(ResourceRequestService service) {
-        this.service = service;
+    public ResourceRequestController(ResourceRequestService requestService) {
+        this.requestService = requestService;
     }
 
     @PostMapping("/{userId}")
-    public ResourceRequest create(@PathVariable Long userId,
-                                  @RequestBody ResourceRequest request) {
-        return service.createRequest(userId, request);
+    public ResponseEntity<ResourceRequest> createRequest(@PathVariable Long userId, @RequestBody ResourceRequest request) {
+        ResourceRequest created = requestService.createRequest(userId, request);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping("/user/{userId}")
-    public List<ResourceRequest> getByUser(@PathVariable Long userId) {
-        return service.getRequestsByUser(userId);
+    public ResponseEntity<List<ResourceRequest>> getRequestsByUser(@PathVariable Long userId) {
+        List<ResourceRequest> requests = requestService.getRequestsByUser(userId);
+        return ResponseEntity.ok(requests);
     }
 
     @GetMapping("/{id}")
-    public ResourceRequest get(@PathVariable Long id) {
-        return service.getRequest(id);
+    public ResponseEntity<ResourceRequest> getRequest(@PathVariable Long id) {
+        ResourceRequest request = requestService.getRequest(id);
+        return ResponseEntity.ok(request);
     }
 
     @PutMapping("/status/{requestId}")
-    public ResourceRequest updateStatus(@PathVariable Long requestId,
-                                        @RequestParam String status) {
-        return service.updateRequestStatus(requestId, status);
+    public ResponseEntity<ResourceRequest> updateRequestStatus(@PathVariable Long requestId, @RequestParam String status) {
+        ResourceRequest updated = requestService.updateRequestStatus(requestId, status);
+        return ResponseEntity.ok(updated);
     }
 }

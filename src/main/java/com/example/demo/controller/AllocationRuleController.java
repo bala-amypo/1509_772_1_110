@@ -2,32 +2,35 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.AllocationRule;
 import com.example.demo.service.AllocationRuleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/rules")
 public class AllocationRuleController {
 
-    private final AllocationRuleService service;
+    private final AllocationRuleService ruleService;
 
-    public AllocationRuleController(AllocationRuleService service) {
-        this.service = service;
+    public AllocationRuleController(AllocationRuleService ruleService) {
+        this.ruleService = ruleService;
     }
 
     @PostMapping
-    public AllocationRule create(@RequestBody AllocationRule rule) {
-        return service.createRule(rule);
+    public ResponseEntity<AllocationRule> createRule(@RequestBody AllocationRule rule) {
+        AllocationRule created = ruleService.createRule(rule);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping
-    public List<AllocationRule> getAll() {
-        return service.getAllRules();
+    public ResponseEntity<List<AllocationRule>> getAllRules() {
+        List<AllocationRule> rules = ruleService.getAllRules();
+        return ResponseEntity.ok(rules);
     }
 
     @GetMapping("/{id}")
-    public AllocationRule get(@PathVariable Long id) {
-        return service.getRule(id);
+    public ResponseEntity<AllocationRule> getRule(@PathVariable Long id) {
+        AllocationRule rule = ruleService.getRule(id);
+        return ResponseEntity.ok(rule);
     }
 }
