@@ -1,4 +1,4 @@
-allocationrulecontroller.java
+//allocationrulecontroller.java
 package com.example.demo.controller;
 
 import com.example.demo.entity.AllocationRule;
